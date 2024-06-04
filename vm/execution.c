@@ -28,6 +28,14 @@ void exit_op() {
     interupt = int_exit;
 }
 
+int exit_handler() {
+    exit(0);
+}
+
+int abort_handler() {
+    abort();
+}
+
 // Needs to align with 'enum opcodes'
 // Array because of O(1) time lookup
 // Instructions need to be handled as void(void) using global state
@@ -81,32 +89,28 @@ void (*opcode_handler[])(void) = {
     dealloc, // 31
 };
 
+int (*interupt_handler[])(void) = {
+    NULL,
+    abort_handler,
+    exit_handler,
+};
+
 int execute() {
     // Following sections create dangling pointers
     // on purpose to ensure stack allocated memory
 
     // section .data
     // Holds stack allocated variables
-    // Do not reference this allocation manually use the global scope pointer
     unsigned char private_data_stack[data_stack_size];
     data_stack = private_data_stack;
 
     // section .text
     // Holds current code segment
-    // Do not reference this allocation manually use the global scope pointer
-    unsigned char private_text_stack[text_stack_size];
+    unsigned char private_text_stack[text_stack_size] = {op_exit};
     text_stack = private_text_stack;
 
     while (1) {
-        switch (interupt) {
-            case int_exit:
-                return 0;
-            case int_abort:
-                abort();
-        }
-
+        interupt != 0 && interupt_handler[interupt]() ;
         opcode_handler[text_stack[text_stack_ptr]]();
     }
-
-    return 1;
 }
