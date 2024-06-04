@@ -5,7 +5,7 @@
 #include "vm/execution.h"
 
 int main() {
-    log_info("Starting KVM");
+    log_info("Starting");
 
     init_heap();
 
@@ -13,6 +13,6 @@ int main() {
     
     close_heap();
 
-    log_info("Exiting KVM");
+    log_info("Exiting");
     return 0;
 }
