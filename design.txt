@@ -1,0 +1,22 @@
+General paradigm:
+    Procedural
+
+Execution and threading:
+    Main thread build in process
+    New threads via pthreads as state machines
+
+Stack:
+    Seperated from main memory for expandability
+    No allocations can be made
+    Static max stack size set by runtime
+
+Variable heap:
+    Malloc syscall returns pointer to memory in region
+
+Syscalls:
+    Arguments pushed to stack
+
+Program space:
+    Memory for code like 'section .text' loads libraries and current process code
+
+Functions:
